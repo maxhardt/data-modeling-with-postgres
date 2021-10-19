@@ -1,0 +1,10 @@
+# ide
+.vscode/*
+
+# data files
+data/*
+*.csv
+
+# log files
+logs/*
+!logs/.gitkeep
