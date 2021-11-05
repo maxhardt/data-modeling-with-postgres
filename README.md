@@ -4,6 +4,10 @@ This application processes data the Sparkify music streaming startup.
 
 To support their analytical use cases, the data is organized in a star schema to allow convenient queries over customer interactions. For example, the number of songs played by specific specific users or artists may be directly queried from the `songplays` *fact* table. The queries then may be enriched by joining data from the *dimension* tables `users`, `songs`, `artists` and `time`, for example by filtering by the day of week.
 
+## Datamodel
+
+The ETL pipeline produces the following datamodel:
+
 **Fact Table**
 - songplays: songplay_id, start_time, user_id, level, song_id, artist_id, session_id, location, user_agent
 
@@ -12,6 +16,8 @@ To support their analytical use cases, the data is organized in a star schema to
 - songs: song_id, title, artist_id, year, duration
 - artists: artist_id, name, location, latitude, longitude
 - time: start_time, hour, day, week, month, year, weekday
+
+![alt text](./ERD.png)
 
 ## Structure
 
