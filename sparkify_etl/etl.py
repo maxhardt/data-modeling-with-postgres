@@ -32,23 +32,13 @@ def process_song_file(cur, filepath: str, conn):
     # insert song record
     song_columns = ["song_id", "title", "artist_id", "year", "duration"]
     song_data = df[song_columns].iloc[0].values.tolist()
-
-    try:
-        cur.execute(song_table_insert, song_data)
-    except psycopg2.errors.UniqueViolation as u:
-        logging.info(f"Skipping songs file due to non-unique song_id key: {filepath}")
-        logging.info(u)
+    cur.execute(song_table_insert, song_data)
     conn.commit()
 
     # insert artist record
     artist_columns = ["artist_id", "artist_name", "artist_location", "artist_latitude", "artist_longitude"]
     artist_data = df[artist_columns].iloc[0].values
-
-    try:
-        cur.execute(artist_table_insert, artist_data)
-    except psycopg2.errors.UniqueViolation as u:
-        logging.info(f"Skipping songs file due to non-unique artist_id key: {filepath}")
-        logging.info(u)
+    cur.execute(artist_table_insert, artist_data)
     conn.commit()
 
 
@@ -77,11 +67,7 @@ def process_log_file(cur, filepath: str, conn):
     time_df = pd.DataFrame(time_data.to_list(), columns=column_labels)
 
     for i, row in time_df.iterrows():
-        try:
-            cur.execute(time_table_insert, list(row))
-        except psycopg2.errors.UniqueViolation as u:
-            logging.info(f"Skipping time entry due to non-unique key: {row}")
-            logging.info(u)
+        cur.execute(time_table_insert, list(row))
         conn.commit()
 
     # load user table
@@ -90,25 +76,22 @@ def process_log_file(cur, filepath: str, conn):
 
     # insert user records
     for i, row in user_df.iterrows():
-        try:
-            cur.execute(user_table_insert, row)
-        except psycopg2.errors.UniqueViolation as u:
-            logging.info(f"Skipping user entry due to non-unique key: {row}")
-            logging.info(u)
+        cur.execute(user_table_insert, row)
         conn.commit()
 
     # insert songplay records
-    for index, row in df.iterrows():
+    for _, row in df.iterrows():
 
-        match_values = row.artist, row.song, row.length
         # get songid and artistid from song and artist tables
-        cur.execute(song_select, match_values)
+        query_values = row.artist, row.song, row.length
+        cur.execute(song_select, query_values)
         results = cur.fetchone()
 
         if results:
             songid, artistid = results
         else:
-            logging.info(f"No entry found for song, artist, duration:\n{match_values}")
+            logging.info(f"No entry found for song_id, artist, duration:\n{query_values} ...")
+            logging.info("Inserting songplay record without song and artist details...")
             songid, artistid = None, None
 
         # insert songplay record

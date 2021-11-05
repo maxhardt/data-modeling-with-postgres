@@ -13,8 +13,8 @@ time_table_drop = "DROP TABLE IF EXISTS time;"
 songplay_table_create = ("""
     CREATE TABLE IF NOT EXISTS songplays (
         songplay_id SERIAL PRIMARY KEY,
-        start_time TIMESTAMP,
-        user_id BIGINT,
+        start_time TIMESTAMP NOT NULL,
+        user_id BIGINT NOT NULL,
         level VARCHAR (100),
         song_id VARCHAR (100),
         artist_id VARCHAR (100),
@@ -28,7 +28,7 @@ songplay_table_create = ("""
 # user_id, first_name, last_name, gender, level
 user_table_create = ("""
     CREATE TABLE IF NOT EXISTS users (
-        user_id SERIAL PRIMARY KEY,
+        user_id INTEGER PRIMARY KEY,
         first_name VARCHAR (100) NOT NULL,
         last_name VARCHAR (100) NOT NULL,
         gender VARCHAR (100) NOT NULL,
@@ -65,12 +65,12 @@ artist_table_create = ("""
 time_table_create = ("""
     CREATE TABLE IF NOT EXISTS time (
         start_time TIMESTAMP PRIMARY KEY,
-        hour BIGINT NOT NULL,
-        day BIGINT NOT NULL,
-        week BIGINT NOT NULL,
-        month BIGINT NOT NULL,
-        year BIGINT NOT NULL,
-        weekday BIGINT NOT NULL
+        hour SMALLINT NOT NULL,
+        day SMALLINT NOT NULL,
+        week SMALLINT NOT NULL,
+        month SMALLINT NOT NULL,
+        year SMALLINT NOT NULL,
+        weekday SMALLINT NOT NULL
     )
 """)
 
@@ -86,24 +86,28 @@ user_table_insert = ("""
     INSERT INTO users
     (user_id, first_name, last_name, gender, level)
     VALUES (%s, %s, %s, %s, %s)
+    ON CONFLICT (user_id) DO UPDATE SET level=EXCLUDED.level
 """)
 
 song_table_insert = ("""
     INSERT INTO songs
     (song_id, title, artist_id, year, duration)
     VALUES (%s, %s, %s, %s, %s)
+    ON CONFLICT (song_id) DO NOTHING
 """)
 
 artist_table_insert = ("""
     INSERT INTO artists
     ("artist_id", "name", "location", "latitude", "longitude")
     VALUES (%s, %s, %s, %s, %s)
+    ON CONFLICT (artist_id) DO NOTHING
 """)
 
 time_table_insert = ("""
     INSERT INTO time
     ("start_time", "hour", "day", "week", "month", "year", "weekday")
     VALUES (%s, %s, %s, %s, %s, %s, %s)
+    ON CONFLICT (start_time) DO NOTHING
 """)
 
 # FIND SONGS
