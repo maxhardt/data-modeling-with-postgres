@@ -1,6 +1,6 @@
 # Sparkify ETL for analytics
 
-This application processes data the Sparkify music streaming startup. 
+This application processes data for the fictional Sparkify music streaming startup. 
 
 To support their analytical use cases, the data is organized in a star schema to allow convenient queries over customer interactions. For example, the number of songs played by specific specific users or artists may be directly queried from the `songplays` *fact* table. The queries then may be enriched by joining data from the *dimension* tables `users`, `songs`, `artists` and `time`, for example by filtering by the day of week.
 
