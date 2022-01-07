@@ -1,4 +1,4 @@
-# Sparkify ETL for analytics
+# ETL and Dimensional Modeling with PostgreSQL
 
 This application processes data for the fictional Sparkify music streaming startup. 
 
